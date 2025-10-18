@@ -133,6 +133,45 @@
   }
 }
 
+@layer utilities {
+  /* Custom HVAC-specific styles */
+  .diagnostic-card {
+    @apply bg-card border border-border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow;
+  }
+
+  .equipment-badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary;
+  }
+
+  .severity-low {
+    @apply text-green-600 bg-green-50 dark:bg-green-950 dark:text-green-400;
+  }
+
+  .severity-medium {
+    @apply text-yellow-600 bg-yellow-50 dark:bg-yellow-950 dark:text-yellow-400;
+  }
+
+  .severity-high {
+    @apply text-orange-600 bg-orange-50 dark:bg-orange-950 dark:text-orange-400;
+  }
+
+  .severity-critical {
+    @apply text-red-600 bg-red-50 dark:bg-red-950 dark:text-red-400;
+  }
+
+  .difficulty-diy {
+    @apply text-blue-600 bg-blue-50 dark:bg-blue-950 dark:text-blue-400;
+  }
+
+  .difficulty-pro {
+    @apply text-purple-600 bg-purple-50 dark:bg-purple-950 dark:text-purple-400;
+  }
+
+  .difficulty-parts {
+    @apply text-orange-600 bg-orange-50 dark:bg-orange-950 dark:text-orange-400;
+  }
+}
+
 @layer components {
   /**
    * Custom container utility that centers content and adds responsive padding.
