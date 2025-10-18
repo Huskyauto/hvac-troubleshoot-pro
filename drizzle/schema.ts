@@ -245,9 +245,15 @@ export const docs = mysqlTable("docs", {
   equipmentTypes: json("equipmentTypes").$type<string[]>(),
   brand: varchar("brand", { length: 120 }),
   modelLike: varchar("modelLike", { length: 120 }),
+  modelId: int("modelId"), // Link to device_models table
   checksum: varchar("checksum", { length: 120 }),
   blobUrl: varchar("blobUrl", { length: 1024 }),
+  fileSize: int("fileSize"), // File size in bytes
+  pageCount: int("pageCount"), // Number of pages in PDF
+  accessCount: int("accessCount").default(0), // Track how many times accessed
+  lastAccessedAt: timestamp("lastAccessedAt"), // Last time this manual was accessed
   createdAt: timestamp("createdAt").defaultNow(),
+  uploadedBy: varchar("uploadedBy", { length: 64 }), // User who uploaded/added this
 });
 
 export type Doc = typeof docs.$inferSelect;

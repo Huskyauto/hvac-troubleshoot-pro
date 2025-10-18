@@ -26,7 +26,8 @@ import {
   Part,
   Supplier,
   SupplierLocation,
-  InventorySnapshot
+  InventorySnapshot,
+  Doc
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -406,6 +407,47 @@ export async function getDocChunks(docId: number) {
   if (!db) return [];
 
   return await db.select().from(docChunks).where(eq(docChunks.docId, docId));
+}
+
+export async function createDoc(doc: typeof docs.$inferInsert) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  return await db.insert(docs).values(doc);
+}
+
+export async function getDocByChecksum(checksum: string): Promise<Doc | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+
+  const result = await db.select().from(docs).where(eq(docs.checksum, checksum)).limit(1);
+  return result[0];
+}
+
+export async function updateDocAccess(docId: number) {
+  const db = await getDb();
+  if (!db) return;
+
+  await db.update(docs)
+    .set({
+      accessCount: sql`${docs.accessCount} + 1`,
+      lastAccessedAt: new Date(),
+    })
+    .where(eq(docs.id, docId));
+}
+
+export async function getDocsByModel(modelId: number): Promise<Doc[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  return await db.select().from(docs).where(eq(docs.modelId, modelId));
+}
+
+export async function getPopularDocs(limit: number = 10): Promise<Doc[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  return await db.select().from(docs).orderBy(sql`${docs.accessCount} DESC`).limit(limit);
 }
 
 // ============= AI Invocations Log =============

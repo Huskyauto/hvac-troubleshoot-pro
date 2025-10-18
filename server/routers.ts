@@ -5,6 +5,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import * as db from "./db";
 import { runDiagnostics, generateRepairReport } from "./services/diagnosticEngine";
+import { saveManual, trackManualAccess, getManualsForModel, searchManuals, getPopularManuals } from "./services/manualService";
 
 export const appRouter = router({
   system: systemRouter,
@@ -195,6 +196,58 @@ export const appRouter = router({
       .mutation(async ({ input }) => {
         const report = await generateRepairReport(input.sessionId);
         return { report };
+      }),
+  }),
+
+  // Manuals
+  manuals: router({
+    save: protectedProcedure
+      .input(z.object({
+        url: z.string(),
+        title: z.string(),
+        source: z.enum(["user_manual", "service_manual", "installation_manual", "parts_list"]),
+        modelId: z.number().optional(),
+        brand: z.string().optional(),
+        equipmentTypes: z.array(z.string()).optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const result = await saveManual({
+          ...input,
+          userId: ctx.user.id,
+        });
+        return result;
+      }),
+
+    byModel: publicProcedure
+      .input(z.object({ modelId: z.number() }))
+      .query(async ({ input }) => {
+        const manuals = await getManualsForModel(input.modelId);
+        return { manuals };
+      }),
+
+    search: publicProcedure
+      .input(z.object({
+        brand: z.string().optional(),
+        equipmentType: z.string().optional(),
+        query: z.string().optional(),
+      }))
+      .query(async ({ input }) => {
+        const manuals = await searchManuals(input);
+        return { manuals };
+      }),
+
+    popular: publicProcedure
+      .input(z.object({ limit: z.number().default(10) }))
+      .query(async ({ input }) => {
+        const manuals = await getPopularManuals(input.limit);
+        return { manuals };
+      }),
+
+    trackAccess: protectedProcedure
+      .input(z.object({ docId: z.number() }))
+      .mutation(async ({ input }) => {
+        await trackManualAccess(input.docId);
+        return { success: true };
       }),
   }),
 

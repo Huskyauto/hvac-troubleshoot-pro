@@ -15,6 +15,13 @@
       "when": 1760755833574,
       "tag": "0001_adorable_quasar",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1760796285464,
+      "tag": "0002_cold_purifiers",
+      "breakpoints": true
     }
   ]
 }
