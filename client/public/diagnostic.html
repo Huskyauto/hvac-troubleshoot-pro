@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HVAC Pro - Diagnostic Page</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 { color: #1e40af; margin-top: 0; }
+        .status { color: #16a34a; font-weight: bold; }
+        .info { margin: 10px 0; padding: 10px; background: #f0f9ff; border-left: 4px solid #1e40af; }
+        a { color: #1e40af; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🔧 HVAC Troubleshoot Pro</h1>
+        <p class="status">✅ Static files are being served correctly!</p>
+        
+        <div class="info">
+            <strong>Diagnostic Information:</strong>
+            <ul>
+                <li>This page loaded successfully from /diagnostic.html</li>
+                <li>Build timestamp: <script>document.write(new Date().toISOString())</script></li>
+                <li>Current URL: <script>document.write(window.location.href)</script></li>
+            </ul>
+        </div>
+        
+        <h2>Test Links:</h2>
+        <ul>
+            <li><a href="/">Go to Homepage</a></li>
+            <li><a href="/api/health">Check API Health</a></li>
+            <li><a href="/api/trpc">Check tRPC Endpoint</a></li>
+        </ul>
+        
+        <p><small>If you can see this page, the server is running and serving static files correctly.</small></p>
+    </div>
+</body>
+</html>

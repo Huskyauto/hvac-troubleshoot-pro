@@ -38,3 +38,13 @@
 - [x] Added health check endpoint for debugging
 - [x] Added detailed logging to static file serving
 - [ ] Test OAuth flow on published URL with new logging
+
+## Platform Deployment Investigation (URGENT)
+- [x] Check if Manus requires specific package.json scripts - start script is correct
+- [x] Verify start script points to correct entry point - points to dist/index.js correctly
+- [x] Check if there's a platform-specific config file needed - none found
+- [x] Investigate if base path or public path needs configuration - paths are correct
+- [x] Test if the issue is with how dist folder is structured - structure is correct
+- [x] Verified production build works perfectly locally
+- [x] Created diagnostic.html page for testing published environment
+- [ ] Test diagnostic page on published URL
