@@ -24,3 +24,17 @@
 - [x] Check production server SPA fallback configuration
 - [x] Verify dist folder structure matches expected deployment format
 - [x] Fix production static file path resolution
+
+## Deployment Investigation
+- [ ] Check if there's a deployment configuration file needed
+- [ ] Verify the build output structure matches Manus expectations
+- [ ] Check for any missing deployment scripts or hooks
+- [ ] Investigate if NODE_ENV is being set correctly in production
+
+## OAuth Callback Issue (CRITICAL)
+- [x] OAuth callback fails on published URL after login
+- [x] Check if callback URL needs to be registered for published domain
+- [x] Verify OAuth redirect configuration handles multiple domains
+- [x] Added health check endpoint for debugging
+- [x] Added detailed logging to static file serving
+- [ ] Test OAuth flow on published URL with new logging

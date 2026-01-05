@@ -54,20 +54,31 @@ export function serveStatic(app: Express) {
     ? path.resolve(import.meta.dirname, "public")
     : path.resolve(import.meta.dirname, "../..", "dist", "public");
   
+  console.log(`[Static] Serving from: ${distPath}`);
+  console.log(`[Static] NODE_ENV: ${process.env.NODE_ENV}`);
+  console.log(`[Static] __dirname: ${import.meta.dirname}`);
+  
   if (!fs.existsSync(distPath)) {
     console.error(
-      `Could not find the build directory: ${distPath}, make sure to build the client first`
+      `[Static] ERROR: Could not find the build directory: ${distPath}`
     );
+  } else {
+    console.log(`[Static] Build directory found: ${distPath}`);
+    const indexPath = path.resolve(distPath, "index.html");
+    console.log(`[Static] Index.html exists: ${fs.existsSync(indexPath)}`);
   }
 
   app.use(express.static(distPath));
 
   // fall through to index.html if the file doesn't exist (SPA fallback)
-  app.use("*", (_req, res) => {
+  app.use("*", (req, res) => {
+    console.log(`[Static] Fallback request for: ${req.originalUrl}`);
     const indexPath = path.resolve(distPath, "index.html");
     if (fs.existsSync(indexPath)) {
+      console.log(`[Static] Serving index.html for: ${req.originalUrl}`);
       res.sendFile(indexPath);
     } else {
+      console.error(`[Static] ERROR: index.html not found at: ${indexPath}`);
       res.status(404).send("Application not found. Please ensure the app is built correctly.");
     }
   });
