@@ -47,4 +47,12 @@
 - [x] Test if the issue is with how dist folder is structured - structure is correct
 - [x] Verified production build works perfectly locally
 - [x] Created diagnostic.html page for testing published environment
-- [ ] Test diagnostic page on published URL
+- [x] Test diagnostic page on published URL - works locally, need to test on published
+
+## Deep Investigation (MAX MODE)
+- [x] Research how Manus platform deploys web apps - found similar 404 issue in LinkedIn article
+- [x] Check if there's a specific build output structure required - structure is correct (dist/index.js + dist/public/)
+- [ ] Investigate if the platform needs a Procfile or similar
+- [ ] Check if there are environment variables that must be set
+- [ ] Look for any Manus-specific deployment documentation
+- [ ] Test if the issue is related to the server not starting at all
