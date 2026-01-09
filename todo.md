@@ -56,3 +56,12 @@
 - [ ] Check if there are environment variables that must be set
 - [ ] Look for any Manus-specific deployment documentation
 - [ ] Test if the issue is related to the server not starting at all
+
+
+## URGENT: Published URL 404 Still Persists
+- [x] Deep investigate Manus platform deployment mechanism - added startup logging
+- [x] Check if there's a specific entry point the platform expects - using standard pnpm start
+- [ ] Verify if the platform runs the build command or expects pre-built files
+- [ ] Check if there's a port configuration issue
+- [x] Investigate if the platform expects a different server setup - added 0.0.0.0 binding
+- [ ] Try simplifying the server to bare minimum to test

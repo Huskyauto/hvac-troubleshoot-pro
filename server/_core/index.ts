@@ -28,6 +28,10 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 }
 
 async function startServer() {
+  console.log(`[Startup] HVAC Troubleshoot Pro starting...`);
+  console.log(`[Startup] NODE_ENV: ${process.env.NODE_ENV}`);
+  console.log(`[Startup] PORT: ${process.env.PORT || '3000 (default)'}`);
+  
   const app = express();
   const server = createServer(app);
   // Configure body parser with larger size limit for file uploads
@@ -66,8 +70,8 @@ async function startServer() {
     console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
   }
 
-  server.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}/`);
+  server.listen(port, "0.0.0.0", () => {
+    console.log(`[Startup] Server running on http://0.0.0.0:${port}/`);
   });
 }
 
