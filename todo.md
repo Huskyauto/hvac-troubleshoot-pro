@@ -65,3 +65,13 @@
 - [ ] Check if there's a port configuration issue
 - [x] Investigate if the platform expects a different server setup - added 0.0.0.0 binding
 - [ ] Try simplifying the server to bare minimum to test
+
+
+## Railway Deployment (Alternative to Manus)
+- [x] Create railway.json and nixpacks.toml configuration
+- [x] Create deployment guide documentation
+- [x] Create environment variables template
+- [ ] Push changes to GitHub
+- [ ] User deploys to Railway
+- [ ] Test published URL on Railway
+- [ ] Verify OAuth works on Railway deployment
