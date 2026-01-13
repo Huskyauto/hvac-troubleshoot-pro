@@ -22,6 +22,13 @@
       "when": 1760796285464,
       "tag": "0002_cold_purifiers",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1768299080180,
+      "tag": "0003_magical_electro",
+      "breakpoints": true
     }
   ]
 }

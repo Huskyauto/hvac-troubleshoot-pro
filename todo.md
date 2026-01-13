@@ -75,3 +75,16 @@
 - [ ] User deploys to Railway
 - [ ] Test published URL on Railway
 - [ ] Verify OAuth works on Railway deployment
+
+
+## Replace OAuth with Email/Password Authentication
+- [x] Update database schema with users table (email, password hash)
+- [x] Implement password hashing with bcrypt
+- [x] Create registration endpoint
+- [x] Create login endpoint
+- [x] Create logout endpoint (already existed)
+- [x] Update authentication context (useAuth hook)
+- [x] Create login UI component
+- [x] Create registration UI component (combined with login)
+- [x] Update protected routes
+- [ ] Test complete authentication flow

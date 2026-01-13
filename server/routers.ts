@@ -1,8 +1,11 @@
 import { COOKIE_NAME } from "@shared/const";
 import { z } from "zod";
+import bcrypt from "bcryptjs";
+import { nanoid } from "nanoid";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
+import { sdk } from "./_core/sdk";
 import * as db from "./db";
 import { runDiagnostics, generateRepairReport } from "./services/diagnosticEngine";
 import { saveManual, trackManualAccess, getManualsForModel, searchManuals, getPopularManuals } from "./services/manualService";
@@ -12,6 +15,89 @@ export const appRouter = router({
 
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
+    
+    register: publicProcedure
+      .input(z.object({
+        email: z.string().email(),
+        password: z.string().min(8),
+        name: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        // Check if user already exists
+        const existing = await db.getUserByEmail(input.email);
+        if (existing) {
+          throw new Error("Email already registered");
+        }
+
+        // Hash password
+        const passwordHash = await bcrypt.hash(input.password, 10);
+
+        // Create user
+        const userId = nanoid();
+        await db.upsertUser({
+          id: userId,
+          email: input.email,
+          name: input.name || null,
+          passwordHash,
+          loginMethod: "email",
+          lastSignedIn: new Date(),
+        });
+
+        // Create session
+        const sessionToken = await sdk.createSessionToken(userId, {
+          name: input.name || input.email,
+          expiresInMs: 365 * 24 * 60 * 60 * 1000, // 1 year
+        });
+
+        const cookieOptions = getSessionCookieOptions(ctx.req);
+        ctx.res.cookie(COOKIE_NAME, sessionToken, {
+          ...cookieOptions,
+          maxAge: 365 * 24 * 60 * 60 * 1000,
+        });
+
+        return { success: true, userId };
+      }),
+
+    login: publicProcedure
+      .input(z.object({
+        email: z.string().email(),
+        password: z.string(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        // Find user
+        const user = await db.getUserByEmail(input.email);
+        if (!user || !user.passwordHash) {
+          throw new Error("Invalid email or password");
+        }
+
+        // Verify password
+        const valid = await bcrypt.compare(input.password, user.passwordHash);
+        if (!valid) {
+          throw new Error("Invalid email or password");
+        }
+
+        // Update last signed in
+        await db.upsertUser({
+          id: user.id,
+          email: user.email,
+          lastSignedIn: new Date(),
+        });
+
+        // Create session
+        const sessionToken = await sdk.createSessionToken(user.id, {
+          name: user.name || user.email,
+          expiresInMs: 365 * 24 * 60 * 60 * 1000, // 1 year
+        });
+
+        const cookieOptions = getSessionCookieOptions(ctx.req);
+        ctx.res.cookie(COOKIE_NAME, sessionToken, {
+          ...cookieOptions,
+          maxAge: 365 * 24 * 60 * 60 * 1000,
+        });
+
+        return { success: true, userId: user.id };
+      }),
+
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });

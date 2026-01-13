@@ -7,13 +7,16 @@ import { boolean, index, int, json, mysqlEnum, mysqlTable, text, timestamp, varc
 export const users = mysqlTable("users", {
   id: varchar("id", { length: 64 }).primaryKey(),
   name: text("name"),
-  email: varchar("email", { length: 320 }),
-  loginMethod: varchar("loginMethod", { length: 64 }),
+  email: varchar("email", { length: 320 }).notNull().unique(),
+  passwordHash: varchar("passwordHash", { length: 255 }),
+  loginMethod: varchar("loginMethod", { length: 64 }).default("email"),
   role: mysqlEnum("role", ["user", "admin", "pro"]).default("user").notNull(),
   phone: varchar("phone", { length: 32 }),
   createdAt: timestamp("createdAt").defaultNow(),
   lastSignedIn: timestamp("lastSignedIn").defaultNow(),
-});
+}, (table) => ({
+  emailIdx: index("emailIdx").on(table.email),
+}));
 
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
